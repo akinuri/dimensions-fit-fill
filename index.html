@@ -85,12 +85,13 @@
     </div>
     <div class="flex gap-4">
         <button id="fit" class="bg-blue-200 px-3 py-1 rounded hover:bg-blue-300/75 active:bg-blue-400/60">Fit</button>
-        <button id="fill" class="bg-green-300/80 px-3 py-1 rounded hover:bg-green-400/50 active:bg-green-400/75 opacity-30 cursor-not-allowed">Fill</button>
+        <button id="fill" class="bg-green-300/80 px-3 py-1 rounded hover:bg-green-400/50 active:bg-green-400/75">Fill</button>
         <button id="reset" class="bg-slate-300 px-3 py-1 rounded hover:bg-slate-400/50 active:bg-slate-400/75">Reset</button>
     </div>
 </div>
 
 <script src="dimensions/fit.js"></script>
+<script src="dimensions/fill.js"></script>
 <script>
     
     let items = Array.from(document.querySelectorAll(".img-container"));
@@ -99,7 +100,8 @@
     resetItems();
     
     document.querySelector("#reset").addEventListener("click", resetItems);
-    document.querySelector("#fit").addEventListener("click", fitItems);
+    document.querySelector("#fit").addEventListener("click", placeItems.bind(null, "fit"));
+    document.querySelector("#fill").addEventListener("click", placeItems.bind(null, "fill"));
     
     function resetItems() {
         items.forEach(entry => {
@@ -114,22 +116,22 @@
         });
     }
     
-    function fitItems() {
+    function placeItems(placeMethod) {
         items.forEach(entry => {
             [containerEl, contentEl] = entry;
-            let fitInfo = fit(
+            let placeInfo = window[placeMethod](
                 contentEl.clientWidth,
                 contentEl.clientHeight,
                 containerEl.clientWidth,
                 containerEl.clientHeight,
                 document.querySelector("select").value,
             );
-            contentEl.style.width  = fitInfo.width + "px";
-            contentEl.style.height = fitInfo.height + "px";
-            if (fitInfo.top    != null) contentEl.style.top    = fitInfo.top + "px";
-            if (fitInfo.left   != null) contentEl.style.left   = fitInfo.left + "px";
-            if (fitInfo.right  != null) contentEl.style.right  = fitInfo.right + "px";
-            if (fitInfo.bottom != null) contentEl.style.bottom = fitInfo.bottom + "px";
+            contentEl.style.width  = placeInfo.width + "px";
+            contentEl.style.height = placeInfo.height + "px";
+            if (placeInfo.top    != null) contentEl.style.top    = placeInfo.top + "px";
+            if (placeInfo.left   != null) contentEl.style.left   = placeInfo.left + "px";
+            if (placeInfo.right  != null) contentEl.style.right  = placeInfo.right + "px";
+            if (placeInfo.bottom != null) contentEl.style.bottom = placeInfo.bottom + "px";
             printElSize(contentEl);
         });
     }
